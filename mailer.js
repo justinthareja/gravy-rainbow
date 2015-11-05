@@ -1,23 +1,12 @@
-var nodemailer = require('nodemailer');
-var config = require('./config.js');
-var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: config.gmail.user,
-        pass: config.gmail.password
-    }
-});
+var sendMail = require('./config.js');
 
 var mailOptions = {
-  from: 'Justin Thareja <justin.thareja@gmail.com>',
-  to: 'Justin At Hackreactor <justin.thareja@hackreactor.com',
-  subject: 'hello',
-  text: 'hello world!'
+  from: 'Justin Thareja <justinthareja@gmail.com>',
+  to: 'JUSTHACK <justin.thareja@hackreactor.com>',
+  subject: 'greetings from my comput0r',
+  html: '<h1>pewpew</h1>',
+  text: 'i hope you\'re having a lovely day'
 };
 
-transporter.sendMail(mailOptions, function(error, info) {
-  if(error) {
-    console.log(error);
-  }
-  console.log(info);
-});
+sendMail(mailOptions)
+  .tap(console.log);
