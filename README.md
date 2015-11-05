@@ -5,7 +5,6 @@ features:
   - [DONE]get a list of words
   - get their definition (scrape m-w)
 - [DONE] ability to send email
-  - read up on nodemailer 
 - some scheduling process
   - read up on chrons
 

@@ -8,5 +8,17 @@ var mailOptions = {
   text: 'i hope you\'re having a lovely day'
 };
 
-sendMail(mailOptions)
-  .tap(console.log);
+// sendMail(mailOptions)
+//   .tap(console.log);
+
+/*
+every day:
+
+grab a random word that hasn't already been sent 
+  initialize a words table with a sent flag, either true or false
+extend into a word obj with  part of speech and definition added
+generate an html template for the body of the email with the word obj
+generate mailOptions (can be multiple)
+send a mail with each set of mailOptions
+
+*/
