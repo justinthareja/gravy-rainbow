@@ -7,10 +7,9 @@ var app = express();
 var port = process.env.PORT || 1337;
 
 mongoose.connect(db.uri);
+mongoose.Promise = require('bluebird');
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-mongoose.connection.once('open', function (callback) {
-  console.log('successfully connected to: ', db.uri);
-});
+mongoose.connection.once('open', db.initialize.bind(db));
 
 scheduler.initialize();
 
@@ -21,6 +20,4 @@ console.log('Launch party on port:', port);
 app.get('/', function(req, res) {
   res.send('hello there');
 });
-
-
 

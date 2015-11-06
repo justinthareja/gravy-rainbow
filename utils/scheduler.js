@@ -10,8 +10,8 @@ rule.minute = 0;
 module.exports = {
 
   initialize: function () {
+    console.log('email schedule initialized...');
     var job = schedule.scheduleJob(rule, function() {
-      // TODO: send email --- maybe a request to its own endpoint
       console.log('hello from the job run callback');
     });
 

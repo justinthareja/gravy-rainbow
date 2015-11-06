@@ -7,17 +7,11 @@ features:
 - [DONE] ability to send email
 - [DONE] some scheduling process
 
+every day:
 
-
-
-  /*
-  every day:
-
-  grab a random word that hasn't already been sent 
-    initialize a words table with a sent flag, either true or false
-  extend into a word obj with  part of speech and definition added
-  generate an html template for the body of the email with the word obj
-  generate mailOptions (can be multiple)
-  send a mail with each set of mailOptions
-
-  */
+[DONE ON DB]grab a random word that hasn't already been sent 
+  initialize a words table with a sent flag, either true or false
+extend into a word obj with  part of speech and definition added
+generate an html template for the body of the email with the word obj
+generate mailOptions (can be multiple)
+send a mail with each set of mailOptions
