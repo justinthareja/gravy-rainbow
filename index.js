@@ -1,7 +1,8 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var db = require('./config/db.js');
-var scheduler = require('./utils/scheduler.js');
+var scheduler = require('./config/scheduler.js');
+var dictionary = require('./utils/dictionary.js');
 
 var app = express();
 var port = process.env.PORT || 1337;
@@ -21,3 +22,4 @@ app.get('/', function(req, res) {
   res.send('hello there');
 });
 
+dictionary('alacrity');
