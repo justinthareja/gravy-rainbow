@@ -23,6 +23,7 @@
     "node-schedule": "^0.3.0",
     "nodemailer": "^1.8.0",
     "nodemailer-mailgun-transport": "^1.0.1",
+    "request": "^2.65.0",
     "spooky": "^0.2.5"
   }
 }

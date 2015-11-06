@@ -8,14 +8,14 @@ module.exports = {
   uri: process.env.MONGO_URI || 'mongodb://localhost/test',
 
   initialize: function() {
-    console.log('successfully opened database connection to:', this.uri);
+    console.log('DB: successfully opened database connection to:', this.uri);
     return Word.find({})
       .then(function(words) {
         if(words.length === 0) {
-          console.log('initializing words table...');
+          console.log('DB: initializing words table...');
           return read('words.json', 'utf-8');
         }
-        throw('database contains some words... skipping initialization');
+        throw('DB: words table populated... short circuiting initialization');
       })
       .then(function(words) {
         words = JSON.parse(words);
@@ -27,7 +27,7 @@ module.exports = {
         }));
       })
       .then(function(createdWords) {
-        console.log('database initialized with', createdWords.length, 'words');
+        console.log('DB: words table populated with', createdWords.length, 'words');
       })
       .catch(function(msg) {
         console.log(msg);
@@ -42,6 +42,7 @@ module.exports = {
       })
       .then(function(word) {
         word.sent = true;
+        word.sentTimestamp = new Date();
         return word.save();
       })
       .then(function(dailyWord) {

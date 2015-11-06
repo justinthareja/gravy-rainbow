@@ -8,7 +8,7 @@ module.exports = function(word) {
     var spooky = new Spooky({
       child: { transport: 'http' },
       casper: {
-          logLevel: 'debug',
+          logLevel: 'info',
           verbose: true
       }
     }, function (err) {
@@ -19,16 +19,20 @@ module.exports = function(word) {
       }
       spooky.start(url);
       spooky.then(function() {
-        var word = this.fetchText('#headword.headword:first-child h1').replace(/[0-9]/g, '');
-        var partOfSpeech = this.fetchText('#headword.headword:first-child .main-fl em');
-        var definition = this.fetchText('#headword.headword:first-child p:first-child').split(':')[1].trim();
-        var sentence = this.fetchText('.example-sentences li:first-child').replace(/<|>/g,'');
-        console.log('WORD=',word);
-        console.log('PARTOFSPEECH=',partOfSpeech);
-        console.log('DEFINITION=', definition);
-        console.log('SENTENCE=', sentence);
+        var result = {};
+
+        result.name = this.fetchText('#headword.headword:first-child h1').replace(/[0-9]/g, '');
+        result.partOfSpeech = this.fetchText('#headword.headword:first-child .main-fl em');
+        result.definition = this.fetchText('#headword.headword:first-child p:first-child').replace(/:|-/g, '');
+        result.sentence = this.fetchText('.example-sentences li:first-child').replace(/<|>/g,'');
+
+        this.emit('complete', result);
       });
       spooky.run();
+    });
+
+    spooky.on('complete', function(word){
+      resolve(word);
     });
 
     spooky.on('error', function (e, stack) {

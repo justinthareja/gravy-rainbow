@@ -2,7 +2,9 @@ var express = require('express');
 var mongoose = require('mongoose');
 var db = require('./config/db.js');
 var scheduler = require('./config/scheduler.js');
-var dictionary = require('./utils/dictionary.js');
+var getDefinition = require('./utils/getDefinition.js');
+var createTemplate = require('./utils/createTemplate.js');
+var mailer = require('./config/mailer.js');
 
 var app = express();
 var port = process.env.PORT || 1337;
@@ -16,10 +18,15 @@ scheduler.initialize();
 
 app.listen(port);
 
-console.log('Launch party on port:', port);
+console.log('SERVER: Launch party on port:', port);
 
-app.get('/', function(req, res) {
-  res.send('hello there');
+app.get('/email', function(req, res) {
+  db.getDailyWord()
+    .then(getDefinition)
+    .then(createTemplate)
+    .then(mailer.generateEmailOptions)
+    .then(mailer.send)
+    .then(function(info) {
+      res.json(info);
+    });
 });
-
-dictionary('alacrity');
