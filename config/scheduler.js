@@ -12,12 +12,13 @@ module.exports = {
   initialize: function () {
     console.log('SCHEDULER: email schedule set', rule);
     var job = schedule.scheduleJob(rule, function() {
+      // The email execution chain is handled by a get request to '/email';
       request({
         url: 'http://localhost:1337/email',
         json: true
       }, function(err, response) {
         if (err) {
-          job.cancel();
+          job.cancel(); // Cancel the job if there's an error thrown
           throw(err);
         }
         console.log('SCHEDULER: email sent to mailgun', response.body);

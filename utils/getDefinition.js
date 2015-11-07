@@ -1,6 +1,7 @@
 var Spooky = require('spooky');
 var Promise = require('bluebird');
 
+// Takes a string that represents a word and resolves with an object with pertinant properties from m-w.com
 module.exports = function(word) {
 
   return new Promise(function(resolve, reject) {

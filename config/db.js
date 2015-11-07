@@ -7,7 +7,7 @@ var read = Promise.promisify(fs.readFile);
 module.exports = {
 
   uri: process.env.MONGO_URI || 'mongodb://localhost/test',
-
+  // Used to initialize database on a fresh deployment
   initialize: function() {
     console.log('DB: successfully opened database connection to:', this.uri);
     return Word.find({})
@@ -34,7 +34,7 @@ module.exports = {
         console.log(msg);
       });
   },
-
+  // Returns a random word from the database that hasn't been sent yet, passed to getDefinition
   getDailyWord: function() {
     return Word.find({ sent: false })
       .then(function(words) {
@@ -57,16 +57,16 @@ module.exports = {
         return dailyWord.word;
       });
   },
-
+  // Returns one long string of all users, used in the to: field of the email options
   getEmailRecipients: function() {
     return User.find({})
       .then(function(users) {
         return users.map(function(user) {
-          return user.email;
+          return '<' + user.name.first + ' ' + user.name.last + '> ' + user.email;
         });
       })
-      .then(function(emails) {
-        return emails.join(', ');
+      .then(function(emailAddresses) {
+        return emailAddresses.join(', ');
       });
   }
 
