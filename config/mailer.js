@@ -21,7 +21,7 @@ module.exports = {
   },
 
   generateEmailOptions: function(htmlString, recipient) {
-    recipient = recipient || 'justin.thareja@gmail.com';
+    recipient = recipient || 'justinthareja@gmail.com';
     return {
       from: 'vocab@gravyrainbow.com',
       to: recipient,

@@ -48,6 +48,7 @@ module.exports = {
       .then(function(dailyWord) {
         return dailyWord.word;
       });
+
   }
 
 };
