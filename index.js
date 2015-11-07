@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var db = require('./config/db.js');
 var scheduler = require('./config/scheduler.js');
 
+
 var app = express();
 var port = process.env.PORT || 1337;
 
@@ -22,5 +23,3 @@ scheduler.initialize();
 app.listen(port);
 
 console.log('SERVER: Launch party on port:', port);
-
-

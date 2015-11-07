@@ -60,9 +60,14 @@ function extendWord() {
   var result = {};
   result.word = this.fetchText('#headword.headword:first-child h1').replace(/[0-9]/g, '');
   result.partOfSpeech = this.fetchText('#headword.headword:first-child .main-fl em');
-  result.definition = this.fetchText('#headword.headword:first-child p:first-child').replace(/:|-/g, '');
   result.sentence = this.fetchText('.example-sentences li:first-child').replace(/<|>/g,'');
+  result.url = this.getCurrentUrl();
   
+  result.definition = this.fetchText('#headword.headword:first-child p:first-child').replace(/:|-/g, '') ||
+    this.evaluate(function() {
+      return document.querySelector('.ssens').textContent.replace(/:|-/g, '');
+    });
+
   // Make sure all the necessary properties were found 
   if(!result.word) {
     this.emit('error', 'DICTIONARY: Error getting word from merriam-webster');
@@ -71,9 +76,10 @@ function extendWord() {
   } else if(!result.definition) {
     this.emit('error', 'DICTIONARY: Error getting definition from merriam-webster');
   } else if(!result.sentence) {
-    this.emit('error', 'DICTIONARY: Error getting part of speech from merriam-webster');
+    this.emit('info', 'DICTIONARY: No sentence found from merriam-webster');
   } else {
     // Pass result to node context
     this.emit('complete', result);
   }
 }
+

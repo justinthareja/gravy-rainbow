@@ -1,4 +1,5 @@
 var Word = require('../models/word.js');
+var User = require('../models/user.js');
 var Promise = require('bluebird');
 var fs = require('fs');
 var read = Promise.promisify(fs.readFile);
@@ -53,8 +54,19 @@ module.exports = {
         return word.save();
       })
       .then(function(dailyWord) {
-        console.log('returning dailyWord=', dailyWord)
         return dailyWord.word;
+      });
+  },
+
+  getEmailRecipients: function() {
+    return User.find({})
+      .then(function(users) {
+        return users.map(function(user) {
+          return user.email;
+        });
+      })
+      .then(function(emails) {
+        return emails.join(', ');
       });
   }
 
