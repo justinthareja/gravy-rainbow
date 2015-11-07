@@ -4,12 +4,14 @@ var Promise = require('bluebird');
 module.exports = function(word) {
 
   return new Promise(function(resolve, reject) {
-    var url = 'http://merriam-webster.com/dictionary/' + word;
+    var options = {
+      url: 'http://www.merriam-webster.com/dictionary/' + word
+    };
     var spooky = new Spooky({
       child: { transport: 'http' },
       casper: {
-          logLevel: 'info',
-          verbose: true
+        logLevel: 'info',
+        verbose: true
       }
     }, function (err) {
       if (err) {
@@ -17,17 +19,8 @@ module.exports = function(word) {
         e.details = err;
         reject(e);
       }
-      spooky.start(url);
-      spooky.then(function() {
-        var result = {};
-
-        result.name = this.fetchText('#headword.headword:first-child h1').replace(/[0-9]/g, '');
-        result.partOfSpeech = this.fetchText('#headword.headword:first-child .main-fl em');
-        result.definition = this.fetchText('#headword.headword:first-child p:first-child').replace(/:|-/g, '');
-        result.sentence = this.fetchText('.example-sentences li:first-child').replace(/<|>/g,'');
-
-        this.emit('complete', result);
-      });
+      spooky.start(options.url);
+      spooky.then([options, extendWord]);
       spooky.run();
     });
 
@@ -55,3 +48,32 @@ module.exports = function(word) {
 
 };
 
+// This function is run in the casper context
+function extendWord() {
+  // Make sure spooky made it to the expected url
+  if (this.getCurrentUrl() !== url) {
+    this.emit('error', 'DICTIONARY: Error resolving word url');
+    return;
+  }
+
+  // Extend word with part of speech, definition, and sentence
+  var result = {};
+  result.word = this.fetchText('#headword.headword:first-child h1').replace(/[0-9]/g, '');
+  result.partOfSpeech = this.fetchText('#headword.headword:first-child .main-fl em');
+  result.definition = this.fetchText('#headword.headword:first-child p:first-child').replace(/:|-/g, '');
+  result.sentence = this.fetchText('.example-sentences li:first-child').replace(/<|>/g,'');
+  
+  // Make sure all the necessary properties were found 
+  if(!result.word) {
+    this.emit('error', 'DICTIONARY: Error getting word from merriam-webster');
+  } else if(!result.partOfSpeech) {
+    this.emit('error', 'DICTIONARY: Error getting part of speech from merriam-webster');
+  } else if(!result.definition) {
+    this.emit('error', 'DICTIONARY: Error getting definition from merriam-webster');
+  } else if(!result.sentence) {
+    this.emit('error', 'DICTIONARY: Error getting part of speech from merriam-webster');
+  } else {
+    // Pass result to node context
+    this.emit('complete', result);
+  }
+}

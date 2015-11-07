@@ -1,8 +1,8 @@
 var schedule = require('node-schedule');
 var request = require('request');
 
-var rule = new schedule.RecurrenceRule();
 // Execute job once every day of the week at 0730 hours
+var rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = new schedule.Range(0, 6);
 rule.hour = 7;
 rule.minute = 30;

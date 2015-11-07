@@ -53,6 +53,7 @@ module.exports = {
         return word.save();
       })
       .then(function(dailyWord) {
+        console.log('returning dailyWord=', dailyWord)
         return dailyWord.word;
       });
   }
