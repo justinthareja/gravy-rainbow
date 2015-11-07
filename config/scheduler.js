@@ -1,5 +1,6 @@
 var schedule = require('node-schedule');
 var request = require('request');
+var host = process.env.HOST || 'http://localhost:1337';
 
 // Execute job once every day of the week at 0730 hours
 var rule = new schedule.RecurrenceRule();
@@ -14,7 +15,7 @@ module.exports = {
     var job = schedule.scheduleJob(rule, function() {
       // The email execution chain is handled by a get request to '/email';
       request({
-        url: 'http://localhost:1337/email',
+        url: host + '/email',
         json: true
       }, function(err, response) {
         if (err) {

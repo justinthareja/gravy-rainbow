@@ -6,7 +6,7 @@ var read = Promise.promisify(fs.readFile);
 
 module.exports = {
 
-  uri: process.env.MONGO_URI || 'mongodb://localhost/test',
+  uri: process.env.MONGOLAB_URI || 'mongodb://localhost/test',
   // Used to initialize database on a fresh deployment
   initialize: function() {
     console.log('DB: successfully opened database connection to:', this.uri);
