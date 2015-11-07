@@ -22,7 +22,7 @@ module.exports = {
         return Promise.all(words.map(function(word) {
           return Word.create({
             word: word,
-            sent: false
+            sent: true
           });
         }));
       })
@@ -37,6 +37,13 @@ module.exports = {
   getDailyWord: function() {
     return Word.find({ sent: false })
       .then(function(words) {
+        if (words.length === 0) {
+          console.log('DB: no unsent words found, recycling sent words');
+          return recycleSentWords();
+        }
+        return words;
+      })
+      .then(function(words){
         var i = Math.floor(Math.random() * words.length);
         return words[i];
       })
@@ -48,8 +55,20 @@ module.exports = {
       .then(function(dailyWord) {
         return dailyWord.word;
       });
-
   }
 
 };
+
+// Resets the sent flags of all the sent words to false
+// Invoked when getDailyWord doesn't find any unsent words
+// Returns a list of newly updated words
+function recycleSentWords() {
+  return Word.find({ sent: true })
+    .then(function(words) {
+      return Promise.map(words, function(word) {
+        word.sent = false;
+        return word.save();
+      });
+    });
+}
 

@@ -8,6 +8,6 @@ TODO:
 - multiple email support
 - signup form
   - w/ email verification
-- recycle wordlist when all words are sent
 - DEPLOY
 - unit testing??
+- sunday summary email

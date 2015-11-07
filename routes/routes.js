@@ -6,16 +6,17 @@ var createTemplate = require('../utils/createTemplate.js');
 module.exports = function(app) {
 
   app.get('/email', function(req, res) {
-    db.getDailyWord()
+    db.getDailyWord.call(db)
       .then(getDefinition)
       .then(createTemplate)
       .then(mailer.generateEmailOptions)
-      .then(mailer.send)
+      // .then(mailer.send)
       .then(function(info) {
         res.json(info);
       })
       .catch(function(err) {
-        res.send(400);
+        console.error(err);
+        res.sendStatus(400);
       });
   });
   
