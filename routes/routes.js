@@ -10,10 +10,10 @@ module.exports = function(app) {
     db.getDailyWord() // Get a random word that hasn't been sent
       .then(getDefinition) // Extend it with properties from m-w
       .then(function(word) {
-        return [
+        return Promise.all([
           renderTemplate(word), // Render the html string
           db.getEmailRecipients() // Get all email recipients
-        ];
+        ]);
       })
       .spread(mailer.generateEmailOptions) // Generate an options object for the mailer
       .then(mailer.send) // Fire it off

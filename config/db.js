@@ -62,7 +62,7 @@ module.exports = {
     return User.find({})
       .then(function(users) {
         return users.map(function(user) {
-          return '<' + user.name.first + ' ' + user.name.last + '> ' + user.email;
+          return user.name.first + ' ' + user.name.last + ' <' + user.email + '> ';
         });
       })
       .then(function(emailAddresses) {
