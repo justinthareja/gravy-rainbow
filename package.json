@@ -28,5 +28,9 @@
     "nodemailer-mailgun-transport": "^1.0.1",
     "request": "^2.65.0",
     "spooky": "^0.2.5"
+  },
+  "engines": {
+    "node": "0.12.x",
+    "npm": "2.10.x"
   }
 }
