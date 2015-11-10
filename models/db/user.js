@@ -5,7 +5,8 @@ var userSchema = mongoose.Schema({
     first: {type: String, required: true},
     last: {type: String, required: true},
   },
-  email: {type: String, required: true, unique: true}
+  email: {type: String, required: true},
+  service: {type: String, required: true}
 });
 
 var User = mongoose.model('User', userSchema);

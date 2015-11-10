@@ -13,8 +13,15 @@ module.exports = {
       api_key: 'key-2aeb02588800dc582c4cd4eeb6852179',
       domain: 'sandbox09720d29b4aa418ea884e8767134a64b.mailgun.org'
     },
-    from: 'vocab@gravyrainbow.com',
-    subject: 'Your daily GRE vocabulary word'
+    dailyVocabWord: {
+      from: 'vocab@gravyrainbow.com',
+      subject: 'Your daily GRE vocabulary word'
+    },
+    dailyFact: {
+      from: 'yourfriendlyneighborhoodshepherd@hackreactor.com',
+      subject: 'Goooood Evening Everyone'
+    }
+    
   }
 
 };

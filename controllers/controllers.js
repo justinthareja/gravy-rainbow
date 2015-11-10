@@ -1,37 +1,36 @@
 var db = require('../models/db.js');
 var mailer = require('../models/mailer.js');
-var getDefinition = require('../models/dictionary.js');
 var renderTemplate = require('../models/renderTemplate.js');
-
+var getTemplateData = require('../models/getTemplateData.js');
 
 module.exports = {
 
   sendEmail: function(req, res) {
-    db.getDailyWord() // Get a random word that hasn't been sent
-      .then(getDefinition) // Extend it with properties from m-w
-      .then(function(word) {
+    getTemplateData(req.params.service, req.params.template)
+      .then(function(data) {
         return Promise.all([
-          renderTemplate(word, req.params.template), // Render the html string
-          db.getEmailRecipients() // Get all email recipients
+          renderTemplate(data, req.params.template),
+          db.getEmailRecipients(req.params.service),
+          req.params.template
         ]);
       })
-      .spread(mailer.generateEmailOptions) // Generate an options object for the mailer
-      .then(mailer.send) // Fire it off
+      .spread(mailer.generateEmailOptions)
+      .then(mailer.send)
       .then(function(info) {
-        res.status(200).send(info); // Respond with node-mailers message
+        res.status(200).send(info);
       })
       .catch(function(err) {
-        res.status(500).send(err);
+        res.status(500).send({ error: err });
       });
   },
 
   sendTestEmail: function(req, res) {
-    db.getDailyWord()
-      .then(getDefinition)
-      .then(function(word) {
+    getTemplateData(req.params.service, req.params.template)
+      .then(function(data) {
         return Promise.all([
-          renderTemplate(word, req.params.template),
-          db.getEmailRecipients()
+          renderTemplate(data, req.params.template),
+          db.getEmailRecipients(req.params.service),
+          req.params.template
         ]);
       })
       .spread(mailer.generateEmailOptions)
@@ -39,17 +38,17 @@ module.exports = {
         res.status(200).send(info);
       })
       .catch(function(err) {
-        res.status(500).send(err);
+        res.status(500).send({ error: err });
       });
   },
 
   createNewUser: function(req, res) {
-    db.createNewUser(req.body)
+    db.createNewUser(req.body, req.params.service)
       .then(function(user) {
         res.status(201).send(user);
       })
       .catch(function(err) {
-        res.status(500).send(err);
+        res.status(400).send({ error: err });
       });
   },
 
@@ -59,7 +58,7 @@ module.exports = {
         res.status(200).send(users);
       })
       .catch(function(err) {
-        res.status(500).send(err);
+        res.status(500).send({ error: err });
       });
   },
 
@@ -69,7 +68,7 @@ module.exports = {
         res.status(200).send(words);
       })
       .catch(function(err) {
-        res.status(500).send(err);
+        res.status(500).send({ error: err });
       });
   }
 

@@ -4,11 +4,11 @@ var path = require('path');
 
 // Takes a data object that is passed to the handlebars template
 // Resolves with a compiled html string
-module.exports = function(data, name) {
-  
+module.exports = function(data, templateName) {
+
   return new Promise(function(resolve, reject) {
 
-    var templateDir = path.join(__dirname, '..', 'templates', name);
+    var templateDir = path.join(__dirname, '..', 'templates', templateName);
     var template = new EmailTemplate(templateDir);
 
     template.render(data, function(err, results) {
