@@ -3,6 +3,7 @@ module.exports = {
   host: process.env.HOST || 'http://localhost:1337',
   port: process.env.PORT || 1337,
   dictionaryUrl: 'http://www.merriam-webster.com/dictionary/',
+  funFactUrl: 'https://www.reddit.com/r/funfacts/top/?sort=top&t=day',
 
   db: {
     uri: process.env.MONGOLAB_URI || 'mongodb://localhost/gravy-rainbow-test'
@@ -18,8 +19,8 @@ module.exports = {
       subject: 'Your daily GRE vocabulary word'
     },
     dailyFact: {
-      from: 'yourfriendlyneighborhoodshepherd@hackreactor.com',
-      subject: 'Goooood Evening Everyone'
+      from: 'shep@herd.com',
+      subject: 'Goooooood Evening Everyone!'
     }
     
   }
