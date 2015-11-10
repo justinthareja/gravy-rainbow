@@ -15,15 +15,16 @@ module.exports = {
     });
   },
 
-  generateEmailOptions: function(htmlString, recipient) {
+  generateEmailOptions: function(htmlString, recipient, template) {
+
     if (!(htmlString && recipient)) {
-      throw new Error('MAILER: No recipients or html to generate options with');
+      throw ('MAILER: No recipients or html to generate email options with');
     }
 
     return {
-      from: config.mailer.from,
+      from: config.mailer[template].from,
       to: recipient,
-      subject: config.mailer.subject,
+      subject: config.mailer[template].subject,
       html: htmlString
     };
   }

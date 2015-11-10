@@ -65,9 +65,10 @@ module.exports = {
     });
   },
 
-  // Returns one long string of all users, used in the to: field of the email options
-  getEmailRecipients: function() {
-    return User.find({})
+  // Returns one long string of all users from the input service
+  // Used in the 'to' field of the email options
+  getEmailRecipients: function(service) {
+    return User.find({ service: service })
       .then(function(users) {
         return users.map(function(user) {
           return user.name.first + ' ' + user.name.last + ' <' + user.email + '> ';
@@ -78,22 +79,29 @@ module.exports = {
       });
   },
 
-  createNewUser: function(userInfo) {
+  createNewUser: function(userInfo, service) {
     return User.find({
+      service: service,
       email: userInfo.email
     })
     .then(function(user) {
-      var userExists = user.length;
+      var userExists = user.length > 0;
       if (!userExists) {
-        return User.create(userInfo);
+        return User.create({
+          name: userInfo.name,
+          email: userInfo.email,
+          service: service
+        });
       }
-      throw new Error('User already exists');
+      throw('User already exists');
     });
   },
 
-  getAllUsers: function(id) {
-    return User.find({});
-  }
+  getAllUsers: function(service) {
+    return User.find({service: service});
+  },
+
+  
 
 };
 
