@@ -7,5 +7,6 @@ TODO:
 - signup form
   - w/ email verification
 - unit testing??
-- DEPLOY
 - sunday summary email
+  - [DONE] route set
+  - TODO: figure out a scheduler for it...

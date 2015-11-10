@@ -1,46 +1,15 @@
-var db = require('../config/db.js');
-var mailer = require('../config/mailer.js');
-var getDefinition = require('../utils/getDefinition.js');
-var renderTemplate = require('../utils/renderTemplate.js');
+var controller = require('../controllers/controllers.js');
 
 module.exports = function(app) {
 
   // The big show. 
-  app.get('/email', function(req, res) {
-    db.getDailyWord() // Get a random word that hasn't been sent
-      .then(getDefinition) // Extend it with properties from m-w
-      .then(function(word) {
-        return Promise.all([
-          renderTemplate(word), // Render the html string
-          db.getEmailRecipients() // Get all email recipients
-        ]);
-      })
-      .spread(mailer.generateEmailOptions) // Generate an options object for the mailer
-      .then(mailer.send) // Fire it off
-      .then(function(info) {
-        res.status(200).send(info); // Respond with node-mailers message
-      })
-      .catch(function(err) {
-        res.status(500).send(err);
-      });
-  });
+  app.get('/email/:template', controller.sendEmail);
+  // The big show minus the actual email part
+  app.get('/test/email/:template', controller.sendTestEmail);
 
-  app.get('/test', function(req, res) {
-    db.getDailyWord()
-      .then(getDefinition)
-      .then(function(word) {
-        return [
-          renderTemplate(word),
-          db.getEmailRecipients()
-        ];
-      })
-      .spread(mailer.generateEmailOptions)
-      .then(function(info) {
-        res.status(200).send(info);
-      })
-      .catch(function(err) {
-        res.status(500).send(err);
-      });
-  });
+  // Basic db queries
+  app.get('/users', controller.getAllUsers);
+  app.post('/users/create', controller.createNewUser);
+  app.get('/words/weekly', controller.getWeeklySummary);
   
 };

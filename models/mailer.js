@@ -1,15 +1,8 @@
 var nodemailer = require('nodemailer');
-var mailgunTransport = require('nodemailer-mailgun-transport');
+var mailgun = require('nodemailer-mailgun-transport');
 var Promise = require('bluebird');
-var transporter = nodemailer.createTransport(mailgunTransport({
-  auth: {
-    api_key: 'key-2aeb02588800dc582c4cd4eeb6852179',
-    domain: 'sandbox09720d29b4aa418ea884e8767134a64b.mailgun.org'
-  }
-}));
-
-var defaultFrom = 'vocab@gravyrainbow.com';
-var defaultSubject = 'Your daily GRE vocabulary word';
+var config = require('../config.js');
+var transporter = nodemailer.createTransport(mailgun({ auth: config.mailer.auth }));
 
 module.exports = {
   
@@ -28,9 +21,9 @@ module.exports = {
     }
 
     return {
-      from: defaultFrom,
+      from: config.mailer.from,
       to: recipient,
-      subject: defaultSubject,
+      subject: config.mailer.subject,
       html: htmlString
     };
   }

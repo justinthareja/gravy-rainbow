@@ -1,15 +1,15 @@
-var Word = require('../models/word.js');
-var User = require('../models/user.js');
 var Promise = require('bluebird');
 var fs = require('fs');
 var read = Promise.promisify(fs.readFile);
+var Word = require('./db/word.js');
+var User = require('./db/user.js');
+var config = require('../config.js');
 
 module.exports = {
 
-  uri: process.env.MONGOLAB_URI || 'mongodb://localhost/test',
   // Used to initialize database on a fresh deployment
   initialize: function() {
-    console.log('DB: successfully opened database connection to:', this.uri);
+    console.log('DB: successfully opened database connection to:', config.db.uri);
     return Word.find({})
       .then(function(words) {
         if(words.length === 0) {
@@ -19,13 +19,12 @@ module.exports = {
         throw('DB: words table populated... short circuiting initialization');
       })
       .then(function(words) {
-        words = JSON.parse(words);
-        return Promise.all(words.map(function(word) {
+        return Promise.map(JSON.parse(words), function(word) {
           return Word.create({
             word: word,
-            sent: true
+            sent: false
           });
-        }));
+        });
       })
       .then(function(createdWords) {
         console.log('DB: words table populated with', createdWords.length, 'words');
@@ -39,7 +38,6 @@ module.exports = {
     return Word.find({ sent: false })
       .then(function(words) {
         if (words.length === 0) {
-          console.log('DB: no unsent words found, recycling sent words');
           return recycleSentWords();
         }
         return words;
@@ -57,6 +55,16 @@ module.exports = {
         return dailyWord.word;
       });
   },
+  // Returns a list of words sent within the past week
+  getWeeklySummary: function() {
+    var oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    return Word.find({
+      sentTimestamp: { $lt: new Date(), $gt: oneWeekAgo }
+    });
+  },
+
   // Returns one long string of all users, used in the to: field of the email options
   getEmailRecipients: function() {
     return User.find({})
@@ -68,14 +76,33 @@ module.exports = {
       .then(function(emailAddresses) {
         return emailAddresses.join(', ');
       });
+  },
+
+  createNewUser: function(userInfo) {
+    return User.find({
+      email: userInfo.email
+    })
+    .then(function(user) {
+      var userExists = user.length;
+      if (!userExists) {
+        return User.create(userInfo);
+      }
+      throw new Error('User already exists');
+    });
+  },
+
+  getAllUsers: function(id) {
+    return User.find({});
   }
 
 };
+
 
 // Resets the sent flags of all the sent words to false
 // Invoked when getDailyWord doesn't find any unsent words
 // Returns a list of newly updated words
 function recycleSentWords() {
+  console.log('DB: recycling sent words');
   return Word.find({ sent: true })
     .then(function(words) {
       return Promise.map(words, function(word) {
@@ -84,4 +111,6 @@ function recycleSentWords() {
       });
     });
 }
+
+
 

@@ -1,12 +1,13 @@
 var Spooky = require('spooky');
 var Promise = require('bluebird');
+var config = require('../config.js');
 
 // Takes a string that represents a word and resolves with an object with pertinant properties from m-w.com
 module.exports = function(word) {
 
   return new Promise(function(resolve, reject) {
     var options = {
-      url: 'http://www.merriam-webster.com/dictionary/' + word
+      url: config.dictionaryUrl + word
     };
     var spooky = new Spooky({
       child: { transport: 'http' },
