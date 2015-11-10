@@ -93,10 +93,7 @@ module.exports = {
 
   getAllUsers: function(id) {
     return User.find({});
-  },
-
-
-  
+  }
 
 };
 

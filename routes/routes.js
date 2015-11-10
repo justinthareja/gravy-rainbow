@@ -7,7 +7,7 @@ module.exports = function(app) {
 
   // The big show. 
   app.get('/email/:template', function(req, res) {
-    db.getDailyWord.call(db) // Get a random word that hasn't been sent
+    db.getDailyWord() // Get a random word that hasn't been sent
       .then(getDefinition) // Extend it with properties from m-w
       .then(function(word) {
         return Promise.all([
@@ -26,13 +26,13 @@ module.exports = function(app) {
   });
 
   app.get('/test/:template', function(req, res) {
-    db.getDailyWord.call(db)
+    db.getDailyWord()
       .then(getDefinition)
       .then(function(word) {
-        return [
+        return Promise.all([
           renderTemplate(word, req.params.template),
           db.getEmailRecipients()
-        ];
+        ]);
       })
       .spread(mailer.generateEmailOptions)
       .then(function(info) {
