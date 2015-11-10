@@ -33,9 +33,12 @@ module.exports = {
           req.params.template
         ]);
       })
-      .spread(mailer.generateEmailOptions)
-      .then(function(info) {
-        res.status(200).send(info);
+      // .spread(mailer.generateEmailOptions)
+      // .then(function(info) {
+      //   res.status(200).send(info);
+      // })
+      .spread(function(templateHtml, recipients, templateName) {
+        res.status(200).send(templateHtml);
       })
       .catch(function(err) {
         res.status(400).send({ error: err });
