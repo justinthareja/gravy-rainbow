@@ -19,8 +19,8 @@ module.exports = {
       subject: 'Your daily GRE vocabulary word'
     },
     dailyFact: {
-      from: 'yourfriendlyneighborhoodshepherd@hackreactor.com',
-      subject: 'Goooood Evening Everyone'
+      from: 'shep@herd.com',
+      subject: 'Goooooood Evening Everyone!'
     }
     
   }
