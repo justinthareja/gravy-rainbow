@@ -18,7 +18,7 @@ module.exports = {
   generateEmailOptions: function(htmlString, recipient, template) {
 
     if (!(htmlString && recipient)) {
-      throw ('MAILER: No recipients or html to generate options with');
+      throw ('MAILER: No recipients or html to generate email options with');
     }
 
     return {

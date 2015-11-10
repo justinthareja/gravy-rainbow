@@ -80,7 +80,6 @@ module.exports = {
   },
 
   createNewUser: function(userInfo, service) {
-    // Each service has their own email field on the user object
     return User.find({
       service: service,
       email: userInfo.email
@@ -100,7 +99,9 @@ module.exports = {
 
   getAllUsers: function(service) {
     return User.find({});
-  }
+  },
+
+  
 
 };
 

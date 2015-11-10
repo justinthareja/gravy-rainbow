@@ -24,7 +24,7 @@ module.exports = {
       });
   },
 
-  sendTestEmail: function(req, res) {
+  sendTest: function(req, res) {
     getTemplateData(req.params.service, req.params.template)
       .then(function(data) {
         return Promise.all([
