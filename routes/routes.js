@@ -1,17 +1,17 @@
-var db = require('../config/db.js');
-var mailer = require('../config/mailer.js');
-var getDefinition = require('../utils/getDefinition.js');
-var renderTemplate = require('../utils/renderTemplate.js');
+var db = require('../models/db.js');
+var mailer = require('../models/mailer.js');
+var getDefinition = require('../models/dictionary.js');
+var renderTemplate = require('../models/renderTemplate.js');
 
 module.exports = function(app) {
 
   // The big show. 
-  app.get('/email', function(req, res) {
-    db.getDailyWord() // Get a random word that hasn't been sent
+  app.get('/email/:template', function(req, res) {
+    db.getDailyWord.call(db) // Get a random word that hasn't been sent
       .then(getDefinition) // Extend it with properties from m-w
       .then(function(word) {
         return Promise.all([
-          renderTemplate(word), // Render the html string
+          renderTemplate(word, req.params.template), // Render the html string
           db.getEmailRecipients() // Get all email recipients
         ]);
       })
@@ -25,18 +25,48 @@ module.exports = function(app) {
       });
   });
 
-  app.get('/test', function(req, res) {
-    db.getDailyWord()
+  app.get('/test/:template', function(req, res) {
+    db.getDailyWord.call(db)
       .then(getDefinition)
       .then(function(word) {
         return [
-          renderTemplate(word),
+          renderTemplate(word, req.params.template),
           db.getEmailRecipients()
         ];
       })
       .spread(mailer.generateEmailOptions)
       .then(function(info) {
         res.status(200).send(info);
+      })
+      .catch(function(err) {
+        res.status(500).send(err);
+      });
+  });
+
+  app.post('/users/create', function(req, res) {
+    db.createNewUser(req.body)
+      .then(function(user) {
+        res.status(201).send(user);
+      })
+      .catch(function(err) {
+        res.status(500).send(err);
+      });
+  });
+
+  app.get('/users', function(req, res) {
+    db.getAllUsers()
+      .then(function(users) {
+        res.status(200).send(users);
+      })
+      .catch(function(err) {
+        res.status(500).send(err);
+      });
+  });
+
+  app.get('/words/weekly', function(req, res) {
+    db.getWeeklySummary()
+      .then(function(words) {
+        res.status(200).send(words);
       })
       .catch(function(err) {
         res.status(500).send(err);
