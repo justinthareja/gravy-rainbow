@@ -98,7 +98,7 @@ module.exports = {
   },
 
   getAllUsers: function(service) {
-    return User.find({});
+    return User.find({service: service});
   },
 
   

@@ -20,7 +20,7 @@ module.exports = {
         res.status(200).send(info);
       })
       .catch(function(err) {
-        res.status(500).send({ error: err });
+        res.status(400).send({ error: err });
       });
   },
 
@@ -38,7 +38,7 @@ module.exports = {
         res.status(200).send(info);
       })
       .catch(function(err) {
-        res.status(500).send({ error: err });
+        res.status(400).send({ error: err });
       });
   },
 
@@ -53,12 +53,12 @@ module.exports = {
   },
 
   getAllUsers: function(req, res) {
-    db.getAllUsers()
+    db.getAllUsers(req.params.service)
       .then(function(users) {
         res.status(200).send(users);
       })
       .catch(function(err) {
-        res.status(500).send({ error: err });
+        res.status(400).send({ error: err });
       });
   },
 
@@ -68,7 +68,7 @@ module.exports = {
         res.status(200).send(words);
       })
       .catch(function(err) {
-        res.status(500).send({ error: err });
+        res.status(400).send({ error: err });
       });
   }
 

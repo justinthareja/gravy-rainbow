@@ -26,7 +26,7 @@ module.exports = function(service, template) {
     throw('Invalid service - no template model found');
   }
 
-  if(![sources][service][template]) {
+  if(!sources[service][template]) {
     throw('Invalid template name - cannot retreive template data');
   }
 

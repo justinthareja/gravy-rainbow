@@ -9,6 +9,6 @@ module.exports = function(app) {
   // Basic db queries sorted by service
   app.get('/users/:service', controller.getAllUsers);
   app.post('/users/:service/create', controller.createNewUser);
-  app.get('/words/weekly', controller.getWeeklySummary);
+  
   
 };
