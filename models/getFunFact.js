@@ -2,11 +2,15 @@ var Spooky = require('spooky');
 var Promise = require('bluebird');
 var config = require('../config.js');
 
-module.exports = function() {
+module.exports = function(archives) {
+  archives = archives.map(function(archive) {
+    return archive.fact;
+  });
 
   return new Promise(function(resolve, reject) {
     var options = {
-      url: config.funFactUrl
+      url: config.funFactUrl,
+      archives: archives
     };
     var spooky = new Spooky({
       child: { transport: 'http' },
@@ -57,13 +61,21 @@ function getFact() {
     return;
   }
 
-  var result = this.evaluate(function() {
-    var post = document.querySelector('#siteTable div .title a');
-    return {
-      fact: post.textContent,
-      url: post.getAttribute('href')
-    };
+  var results = this.evaluate(function() {
+    var containers = [].slice.call(document.querySelectorAll('#siteTable div.thing.link'));
+    return containers.map(function(container) {
+      var post = container.querySelector('.title a');
+      return {
+        fact: post.textContent,
+        url: post.getAttribute('href')
+      };
+    });
   });
+
+  var result = results.filter(function(result) {
+    return archives.indexOf(result.fact) === -1;
+  })[0];
+
 
   if (!result.fact) {
     this.emit('error', 'FUN FACT: Error no fact found');

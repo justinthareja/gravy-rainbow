@@ -3,6 +3,7 @@ var fs = require('fs');
 var read = Promise.promisify(fs.readFile);
 var Word = require('./db/word.js');
 var User = require('./db/user.js');
+var Fact = require('./db/fact.js');
 var config = require('../config.js');
 
 module.exports = {
@@ -101,6 +102,14 @@ module.exports = {
     return User.find({service: service});
   },
 
+  saveFact: function(funFact) {
+    funFact.sentTimestamp = new Date();
+    return Fact.create(funFact);
+  },
+
+  getArchivedFacts: function() {
+    return Fact.find({}).sort('-sentTimestamp');
+  }
   
 
 };
