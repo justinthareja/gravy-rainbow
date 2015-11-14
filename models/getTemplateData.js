@@ -15,7 +15,9 @@ var sources = {
 
   funFact: {
     dailyFact: function() {
-      return getFunFact();
+      return db.getArchivedFacts()
+        .then(getFunFact)
+        .then(db.saveFact);
     }
   }
 
