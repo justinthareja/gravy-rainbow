@@ -5,7 +5,7 @@ var getTemplateData = require('../models/getTemplateData.js');
 
 module.exports = {
 
-  sendEmail: function(req, res) {
+  sendEmail: function(req, res, next) {
     getTemplateData(req.params.service, req.params.template)
       .then(function(data) {
         return Promise.all([
@@ -19,12 +19,10 @@ module.exports = {
       .then(function(info) {
         res.status(200).send(info);
       })
-      .catch(function(err) {
-        res.status(400).send({ error: err });
-      });
+      .catch(next);
   },
 
-  sendTest: function(req, res) {
+  sendTest: function(req, res, next) {
     getTemplateData(req.params.service, req.params.template)
       .then(function(data) {
         return Promise.all([
@@ -40,39 +38,31 @@ module.exports = {
       // .spread(function(templateHtml, recipients, templateName) {
       //   res.status(200).send(templateHtml);
       // })
-      .catch(function(err) {
-        res.status(400).send({ error: err });
-      });
+      .catch(next);
   },
 
-  createNewUser: function(req, res) {
+  createNewUser: function(req, res, next) {
     db.createNewUser(req.body, req.params.service)
       .then(function(user) {
         res.status(201).send(user);
       })
-      .catch(function(err) {
-        res.status(400).send({ error: err });
-      });
+      .catch(next);
   },
 
-  getAllUsers: function(req, res) {
+  getAllUsers: function(req, res, next) {
     db.getAllUsers(req.params.service)
       .then(function(users) {
         res.status(200).send(users);
       })
-      .catch(function(err) {
-        res.status(400).send({ error: err });
-      });
+      .catch(next);
   },
 
-  getWeeklySummary: function(req, res) {
+  getWeeklySummary: function(req, res, next) {
     db.getWeeklySummary()
       .then(function(words) {
         res.status(200).send(words);
       })
-      .catch(function(err) {
-        res.status(400).send({ error: err });
-      });
+      .catch(next);
   }
 
 }

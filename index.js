@@ -20,8 +20,10 @@ mongoose.connection.once('open', db.initialize);
 // Inject routes
 require('./routes/routes.js')(app);
 
-// Initialize email scheduler
-// scheduler.initialize();
+app.use(function(err, req, res, next) {
+  var e = err.message ? err.message : err;
+  res.status(400).send(e);
+})
 
 // Listen to incoming requests
 app.listen(config.port);

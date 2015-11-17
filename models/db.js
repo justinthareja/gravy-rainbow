@@ -30,9 +30,7 @@ module.exports = {
       .then(function(createdWords) {
         console.log('DB: words table populated with', createdWords.length, 'words');
       })
-      .catch(function(msg) {
-        console.log(msg);
-      });
+      .catch(console.log);
   },
   // Returns a random word from the database that hasn't been sent yet, passed to getDefinition
   getDailyWord: function() {
@@ -94,7 +92,7 @@ module.exports = {
           service: service
         });
       }
-      throw('User already exists');
+      throw new Error('DB: User already exists');
     });
   },
 
@@ -102,16 +100,27 @@ module.exports = {
     return User.find({service: service});
   },
 
-  saveFact: function(funFact) {
-    funFact.sentTimestamp = new Date();
-    return Fact.create(funFact);
-  },
-
-  getArchivedFacts: function() {
-    return Fact.find({}).sort('-sentTimestamp');
+  // Receives a list of reddits top fun facts from getFunFact and filters out duplicates from the DB
+  // Selects the first from the filtered list, saves to db, and passes as the template data
+  checkArchives: function(funFacts) {
+    return Fact.find({})
+      .then(function(archives) {
+        var archivedFacts = archives.map(function(archive) {
+          return archive.fact;
+        });
+        var uniqueFacts = funFacts.filter(function(funFact) {
+          return archivedFacts.indexOf(funFact.fact) === -1;
+        });
+        if (uniqueFacts.length === 0) { throw new Error('DB: No new facts found from reddit'); }
+        
+        return uniqueFacts[0];
+      })
+      .then(function(dailyFact) {
+        dailyFact.sentTimestamp = new Date();
+        return Fact.create(dailyFact);
+      });
   }
   
-
 };
 
 

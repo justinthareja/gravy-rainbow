@@ -3,7 +3,7 @@ module.exports = {
   host: process.env.HOST || 'http://localhost:1337',
   port: process.env.PORT || 1337,
   dictionaryUrl: 'http://www.merriam-webster.com/dictionary/',
-  funFactUrl: 'https://www.reddit.com/r/funfacts/top/?sort=top&t=day',
+  funFactUrl: 'https://www.reddit.com/r/funfacts',
 
   db: {
     uri: process.env.MONGOLAB_URI || 'mongodb://localhost/gravy-rainbow-test'

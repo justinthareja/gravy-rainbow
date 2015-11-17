@@ -1,6 +1,6 @@
 var db = require('./db.js');
 var getDefinition = require('./getDefinition.js');
-var getFunFact = require('./getFunFact.js');
+var getFunFacts = require('./getFunFact.js');
 
 var sources = {
   // each service name has it's own template library 
@@ -15,9 +15,7 @@ var sources = {
 
   funFact: {
     dailyFact: function() {
-      return db.getArchivedFacts()
-        .then(getFunFact)
-        .then(db.saveFact);
+      return getFunFacts().then(db.checkArchives);
     }
   }
 
