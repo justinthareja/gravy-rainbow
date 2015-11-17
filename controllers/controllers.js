@@ -21,7 +21,7 @@ module.exports = {
       })
       .catch(next);
   },
-
+  // TODO: abstract save logic out to omit on test -- maybe?
   sendTest: function(req, res, next) {
     getTemplateData(req.params.service, req.params.template)
       .then(function(data) {
@@ -31,13 +31,13 @@ module.exports = {
           req.params.template
         ]);
       })
-      .spread(mailer.generateEmailOptions)
-      .then(function(info) {
-        res.status(200).send(info);
-      })
-      // .spread(function(templateHtml, recipients, templateName) {
-      //   res.status(200).send(templateHtml);
+      // .spread(mailer.generateEmailOptions)
+      // .then(function(info) {
+      //   res.status(200).send(info);
       // })
+      .spread(function(templateHtml, recipients, templateName) {
+        res.status(200).send(templateHtml);
+      })
       .catch(next);
   },
 
